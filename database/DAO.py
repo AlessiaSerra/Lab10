@@ -1,6 +1,44 @@
 from database.DB_connect import DBConnect
-
+from model.country import  Country
 
 class DAO():
-    def __init__(self):
-        pass
+    def getNodes(self, year):
+        conn = DBConnect.get_connection()
+        cursor = conn.cursor(dictionary = True)
+        res = []
+
+        query = """select distinct(state1no), state1ab,c.StateNme
+                    from country c, contiguity
+                    where state1no = c.CCode and year< %d
+                            """
+
+        cursor.execute(query, year)
+
+        for row in cursor:
+            res.append(Country(row['StateName'], row['state1ab']. row['state1no']))
+
+        cursor.close()
+        conn.close()
+        return res
+
+    def getEdges(self, year):
+        conn = DBConnect.get_connection()
+        cursor = conn.cursor(dictionary=True)
+        res = []
+
+        query = """select distinct state1no, state2no
+                    from contiguity
+                    where year<=2000 and state1no <state2no and conttype = 1
+                                   """
+
+        cursor.execute(query, year)
+
+        for row in cursor:
+            res.append((row["state1no"], row["state2no"]))
+
+        cursor.close()
+        conn.close()
+        return res
+
+
+
