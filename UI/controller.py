@@ -1,5 +1,4 @@
 import flet as ft
-import networkx as nx
 
 class Controller:
     def __init__(self, view, model):
@@ -7,10 +6,11 @@ class Controller:
         self._view = view
         # the model, which implements the logic of the program and holds the data
         self._model = model
-        self._graph = None
 
     def fillDDstato(self):
-        pass
+        stati = self._model.getStati()
+        for stato in stati:
+            self._view._ddStato.options.append(ft.dropdown.Option(stato))
 
     def handleRaggiungibili(self, e):
         pass
@@ -20,8 +20,17 @@ class Controller:
         if anno<1816 or anno >2016:
             self._view.create_alert("Inerisci una data nell'intervallo 1816-2016 !")
             return
-        self._graph = self._model.buildGraph(anno)
+        created = self._model.buildGraph(anno)
 
-        for state in self._graph.nodes():
-            self.view._txt_result.append(ft.Text(f"{state} -- {state.degree()}"))
+        if created:
+            self._view._btnStatiRaggiungibili.disabled = False
+            self._view._txt_result.controls.append(ft.Text(f"Grafo correttamente creato."))
+            n_comp = self._model.getComponentiConnesse()
+            self._view._txt_result.controls.append(ft.Text(f"Il grafo ha {n_comp} componeti connesse.\n Di seguito il dettaglio sui nodi.\n"))
+            grado_vertici = self._model.getGradi()
+            print(grado_vertici)
+            for key in grado_vertici.keys():
+                self._view._txt_result.controls.append(
+                    ft.Text(f" {key} --- {grado_vertici[key]} vicini."))
+                self._view.update_page()
 

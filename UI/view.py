@@ -29,7 +29,7 @@ class View(ft.UserControl):
         self._page.controls.append(row1)
         self._ddStato = ft.Dropdown(label="Stato", options = [])
         self.controller.fillDDstato()
-        self._btnStatiRaggiungibili = ft.ElevatedButton(text="Stati raggiungibili", on_click=self._controller.handleRaggiungibili)
+        self._btnStatiRaggiungibili = ft.ElevatedButton(text="Stati raggiungibili", on_click=self._controller.handleRaggiungibili, disabled = True)
         row2 = ft.Row([self._ddStato, self._btnStatiRaggiungibili], alignment=ft.MainAxisAlignment.CENTER)
         self._page.controls.append(row2)
         # List View where the reply is printed
